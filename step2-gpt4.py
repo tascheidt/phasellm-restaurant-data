@@ -11,22 +11,21 @@ This file is step2.py
 Questions? Please reach out: w --at-- phaseai --dot-- com
 """
 
-import json
-import time
-import pandas as pd
-from phasellm.llms import *
-from apikeys import *
-
 ###
 # Your API keys and settings.
 
 # OpenAI API Key; we use GPT-4 in this demo
-openai_key = openai_key
+openai_key = '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'
 
 # Google API Key for using its web search components + a search ID
 # Our search ID has a global web context; i.e., we simply use the base Google search offering
-google_api_key = google_api_key
-search_id = search_id
+google_api_key = 'AIzaSyDAJEjbQRwZnC1L3O7PoddpJEedr-jG0_o'
+search_id = 'f5da9b45ac43349df'
+
+import json
+import time
+import pandas as pd
+from phasellm.llms import *
 
 ###
 # Message prompts used by the LLM to extract information
@@ -69,34 +68,26 @@ def parse_lines(content, results):
 
     This function parses the output above into a set of dictionary objects and appends it back into the results object.
     """
-    if results is None:
-        results = {}
-
     lines = content.split("\n")
-    for i in range(len(lines)):
-        line = lines[i].strip()
-        if line and line.startswith("NAME"):
-            restaurant_name = line[6:].strip()
-            
-            if restaurant_name not in results:
-                results[restaurant_name] = {
-                    "name": restaurant_name,
-                    "description": "",
-                    "count": 1,
-                }
-            else:
-                results[restaurant_name]["count"] += 1
-            
-            if i + 1 < len(lines):
-                desc = lines[i + 1][13:].strip()
-            else:
-                # Handle the case where i + 1 is out of range
-                desc = ""
-
-            if desc:
-                results[restaurant_name]["description"] += f"- {desc}\n"
-
+    if len(lines) > 1:
+        for i in range(0, len(lines)):
+            line = lines[i].strip()
+            if len(line.strip()) > 0:
+                if line[0:4] == "NAME":
+                    restaurant_name = line[6:].strip()
+                    if restaurant_name not in results:
+                        results[restaurant_name] = {
+                            "name": restaurant_name,
+                            "description": "",
+                            "count": 1,
+                        }
+                    else:
+                        results[restaurant_name]["count"] += 1
+                    desc = lines[i + 1][13:].strip()
+                    if len(desc) > 0:
+                        results[restaurant_name]["description"] += "- " + desc + "\n"
     return results
+
 
 ###
 # Set up the ChatBot flow with the prompts above.
@@ -107,8 +98,6 @@ cp = ChatPrompt(
         {"role": "user", "content": message_prompt_2},
     ]
 )
-
-#llm = OpenAIGPTWrapper(openai_key, model="gpt-3.5-turbo-16k")
 llm = OpenAIGPTWrapper(openai_key, model="gpt-4")
 cb = ChatBot(llm)
 
@@ -148,5 +137,5 @@ for r in results:
     time.sleep(30)
 
 # Save results to JSON.
-with open("parsed.json", "w") as writer:
+with open("parsed-gpt4.json", "w") as writer:
     writer.write(json.dumps(parsed))

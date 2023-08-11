@@ -1,0 +1,16 @@
+Step 1
+- input the queries - potentially have a query expander with the most common variants, especially if only doing restaurants 
+- input the title/theme that then creates named output files
+- start with putting the queries in a query.txt file then ask chat gpt how to create a simple UX for inputting the queries 
+- [done] abstract the keys into a keys file similar to what we did for the banker 
+- avoid picking up duplicate sites to improve efficiency of the parsing and content later 
+
+Step 2
+- [done] abstract keys  
+- abstract naming of the json file 
+- [done, need to test] update the parsing function for error handling
+- let user select the model to use, maybe pull in from OpenAI list of models 
+- enable adjustment of parameters, either by user or based on the model picked
+
+Step 3 
+- abstract file and tab name 

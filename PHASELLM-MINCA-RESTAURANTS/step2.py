@@ -15,18 +15,20 @@ import json
 import time
 import pandas as pd
 from phasellm.llms import *
+from collections import defaultdict
 from apikeys import *
 
 ###
 # Your API keys and settings.
 
-# OpenAI API Key; we use GPT-4 in this demo
+# OpenAI API Key
 openai_key = openai_key
 
 # Google API Key for using its web search components + a search ID
 # Our search ID has a global web context; i.e., we simply use the base Google search offering
 google_api_key = google_api_key
 search_id = search_id
+
 
 ###
 # Message prompts used by the LLM to extract information
@@ -35,7 +37,7 @@ search_id = search_id
 message_prompt_1 = """You are a culinary researcher putting together a food tour. This food tour needs to include the best restaurants from a broader list that has been provided to you. You are going to follow these steps in generating your list:
 1. You will be given content to review.
 2. Please review the content and simply make a list of all the restaurants mentioned.
-3. Each element in the list should ONLY include the (a) restaurant name, and (b) a 5-10 word description of the food they serve.
+3. Each element in the list should ONLY include the (a) restaurant name, and (b) a 5-10 word description of the food they serve. Do not duplicate any restaurants in the list. 
 
 Please provide the output in the following format for each restauran:
 NAME: <restaurant name>
@@ -55,18 +57,8 @@ message_prompt_2 = """Here is the information to review.
 # Helper functions
 
 
-def parse_lines(content, results):
+def parse_lines(content, results=None):
     """
-    We expect our chatbot to return a piece of text with the following format:
-
-    NAME: <restaurant 1>
-    DESCRIPTION: <description 1>
-
-    NAME: <restaurant 2>
-    DESCRIPTION: <description 2>
-
-    ... and so on
-
     This function parses the output above into a set of dictionary objects and appends it back into the results object.
     """
     if results is None:
@@ -98,6 +90,8 @@ def parse_lines(content, results):
 
     return results
 
+
+
 ###
 # Set up the ChatBot flow with the prompts above.
 
@@ -107,14 +101,12 @@ cp = ChatPrompt(
         {"role": "user", "content": message_prompt_2},
     ]
 )
-
-#llm = OpenAIGPTWrapper(openai_key, model="gpt-3.5-turbo-16k")
-llm = OpenAIGPTWrapper(openai_key, model="gpt-4")
+llm = OpenAIGPTWrapper(openai_key, model="gpt-3.5-turbo-16k")
 cb = ChatBot(llm)
 
 # Load results from step1.py
 results = []
-with open("search.json", "r") as reader:
+with open("search_minca.json", "r") as reader:
     results_ = reader.read()
     results = json.loads(results_)["results"]
 
@@ -148,5 +140,5 @@ for r in results:
     time.sleep(30)
 
 # Save results to JSON.
-with open("parsed.json", "w") as writer:
+with open("parsed_minca.json", "w") as writer:
     writer.write(json.dumps(parsed))

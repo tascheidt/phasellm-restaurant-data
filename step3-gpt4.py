@@ -21,4 +21,4 @@ with open("parsed.json", "r") as reader:
 
 # Convert the JSON into a Pandas DataFrame and save it to an Excel file
 df = pd.DataFrame.from_records(list(parsed.values()))
-df.to_excel("restaurants-in-ginza.xlsx", sheet_name="Restaurants-gpt3.5")
+df.to_excel("restaurants-in-ginza.xlsx", sheet_name="Restaurants-gpt4")

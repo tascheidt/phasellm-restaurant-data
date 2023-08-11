@@ -13,17 +13,16 @@ Questions? Please reach out: w --at-- phaseai --dot-- com
 
 ###
 # The queries we want to run; this can work on any sort of restaurant
+
 queries = [
-    "best japanese restaurants in ginza part of tokyo",
-    "ginza restaurants that only locals know",
-    "tokyo ginza restaurants that are holes in the wall but AMAZING",
-    "unique tokyo ginza restaurants",
-    "tokyo ginza best food",
-    "most unique tokyo (ginza) restaurants",
-    "best tokyo ginza restaurants you can't miss",
+    "best restaurants in Minca Colombia",
+    "Minca restaurants that have an incredible vibe",
+    "Minca restaurants that have great coffee",
+    "healthy Minca restaurants",
+    "vegetarian friendly Minca restaurants",
+    "Minca restaurants with amazing breakfast",
+    "unique Minca restaurants",
 ]
-
-
 
 import json
 from phasellm.agents import WebSearchAgent
@@ -34,7 +33,6 @@ from apikeys import *
 # Your API keys and settings.
 
 # OpenAI API Key; we use GPT-4 in this demo
-openai_key = "YOUR OPENAI API KEY"
 openai_key = openai_key
 
 # Google API Key for using its web search components + a search ID
@@ -66,7 +64,7 @@ for result in results:
     }
     results_dict["results"].append(r)
 
-with open("search.json", "w") as writer:
+with open("search_minca.json", "w") as writer:
     writer.write(json.dumps(results_dict))
 
 print(f"Number of sites found and crawled: {len(results_dict['results'])}")
